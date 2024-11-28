@@ -1,0 +1,273 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    /* flex-direction: column; */
+    height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #489;
+    color: #fff;
+    padding: 10px 10px;
+}
+
+.logo {
+    height: 40px;
+}
+
+.header h1 {
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.avatar {
+    height: 40px;
+    border-radius: 50%;
+}
+
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background-color: #333;
+    color: #fff;
+    padding: 0 10px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #535353;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #575757;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    /* overflow-y: auto; */
+}
+
+.main-content section {
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filter input {
+    width: 40%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filter button {
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter #sort-select{
+    box-sizing: content-box;
+    width: 20%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#sort-select:hover{
+    border: 1px solid #333;
+    cursor: pointer;
+}
+.filter button:hover {
+    background-color: #575757;
+}
+
+.content-list {
+    margin-top: 20px;
+}
+
+/* Kiểu cho bảng nhân viên */
+#employee-table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp các đường viền của ô lại với nhau */
+    margin-top: 20px; /* Khoảng cách phía trên bảng */
+}
+
+#employee-table th, #employee-table td {
+    border: 1px solid #ddd; /* Đường viền cho các ô */
+    padding: 8px; /* Khoảng cách bên trong ô */
+    text-align: left; /* Căn trái cho văn bản */
+}
+
+#employee-table th {
+    background-color: #f2f2f2; /* Màu nền cho tiêu đề bảng */
+    color: #333; /* Màu chữ cho tiêu đề bảng */
+}
+
+#employee-table tr:nth-child(even) {
+    background-color: #f7f7f7; /* Màu nền cho các hàng chẵn */
+}
+
+#employee-table tr:hover {
+    background-color: #f1f1f1; /* Màu nền khi di chuột qua hàng */
+}
+#employee-table td:last-child{
+    text-align: center;
+    width: 70px;
+}
+#employee-table button{
+    background-color: #333; 
+    padding: 5px 10px;
+    text-align: center;
+    display: inline-block;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    justify-content: right;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination span {
+    margin: 10px 5px;
+    font-size: smaller;
+}
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Kiểu cho modal */
+.modal {
+    display: none; /* Ẩn modal theo mặc định */
+    position: fixed; /* Đặt modal ở vị trí cố định */
+    z-index: 1; /* Đặt z-index cao để hiện lên trên các phần tử khác */
+    left: 0;
+    top: 0;
+    width: 100%; /* Toàn bộ chiều rộng */
+    height: 100%; /* Toàn bộ chiều cao */
+    overflow: auto; /* Thêm cuộn nếu cần */
+    background-color: rgba(0,0,0,0.4); /* Màu nền mờ */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin:80px auto; /* Đặt modal ở giữa */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%; /* Chiều rộng của modal */
+    text-align: center;
+    border-radius: 5px;
+}
+#employee-details table{
+    width: 90%;
+    border-collapse: collapse;
+    margin: 20px auto
+}
+#employee-details td{
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 10px;
+    /* width: 50%; */
+}
+.modal button{
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.modal-content{
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="date"],
+    select {
+        width: 90%; /* Chiếm toàn bộ chiều rộng */
+        padding: 10px; /* Padding cho trường nhập */
+        margin: 8px 0; /* Khoảng cách trên/dưới */
+        border: 2px solid #ccc; /* Đường viền xám */
+        border-radius: 4px; /* Bo góc */
+    }
+    select {
+        width: 95%;
+    }
+    /* Nút thêm nhân viên */
+    button[type="submit"] {
+        background-color: #333; 
+        color: white; /* Chữ trắng */
+        padding: 10px 15px; /* Padding cho nút */
+        border: none; /* Không có đường viền */
+        border-radius: 4px; /* Bo góc */
+        cursor: pointer; /* Đổi con trỏ thành pointer */
+    }
+}
+.close{
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
