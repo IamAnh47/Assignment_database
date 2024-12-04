@@ -65,17 +65,29 @@ Lệnh trên sẽ khởi động server với \`nodemon\`, tự động tải l�
 assignment_web/
 
 │
+
 ├── app.js                  # File chính khởi động ứng dụng
+
 ├── views/                  # File giao diện
+
 ├── server/                 # Server
+
     ├── controllers/
+    
     ├── models/ 
+    
     ├── routes/
+    
 ├── public/                 # Tệp tĩnh (CSS, JS)
+
 ├── .env                    # File cấu hình biến môi trường
+
 ├── package-lock.json
+
 ├── package.json            # Danh sách thư viện và script
+
 └── README.md               # Hướng dẫn
+
 \`\`\`
 
 ---
