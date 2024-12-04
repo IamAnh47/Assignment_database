@@ -63,6 +63,7 @@ Lệnh trên sẽ khởi động server với \`nodemon\`, tự động tải l�
 ## Cấu trúc
 \`\`\`
 assignment_web/
+
 │
 ├── app.js                  # File chính khởi động ứng dụng
 ├── views/                  # File giao diện
