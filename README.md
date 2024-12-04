@@ -17,7 +17,7 @@ Web sử dụng Node.js, sử dụng Express làm framework chính, Express-Hand
 
 ### 1. Tải mã nguồn
 Clone repository:
-**git clone** <repository-url>
+**git clone** *repository-url*
 
 
 ### 2. Di chuyển vào thư mục dự án
