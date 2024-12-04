@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhân Viên - Trang Quản Lý Admin</title>
+    <link rel="stylesheet" href="../public/css/styles.css">
+</head>
+<body>
+    <header class="header">
+        <img src="" alt="Logo" class="logo">
+        <h1>Quản Lý</h1>
+        <img src="" alt="Avatar" class="avatar">
+    </header>
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Quản Lý</h2>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Người Dùng</a></li>
+                <li><a href="#">Sản Phẩm</a></li>
+                <li><a href="#">Đơn Hàng</a></li>
+                <li><a href="#">Nhân Viên</a></li>
+                <li><a href="#">Báo Cáo</a></li>
+                <li><a href="#">Cài Đặt</a></li>
+                <li><a href="#">Đăng Xuất</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <section>
+                <h2>Nhân Viên</h2>
+                <div class="filter">
+                    <input type="text" id="search-input" placeholder="Tìm kiếm nhân viên...">
+                
+                    <select id="chinhanh">
+                        <option value="default">Chọn Chi Nhánh</option>
+                        
+                    </select>
+                    <select id="cuahang">
+                        <option value="default">Chọn Cửa Hàng</option>
+                        
+                    </select>
+                    <select id="khohang">
+                        <option value="default">Chọn Kho Hàng</option>
+                        
+                    </select>
+                    <select id="sort-select">
+                        <option value="ten-tang">Sắp xếp theo tên (A-Z)</option>
+                        <option value="ten-giam">Sắp xếp theo tên (Z-A)</option>
+                        <option value="luong-tang">Sắp xếp theo lương (Tăng dần)</option>
+                        <option value="luong-giam">Sắp xếp theo lương (Giảm dần)</option>
+                        <option value="ngaydilam-tang">Sắp xếp theo ngày bắt đầu (Cũ nhất)</option>
+                        <option value="ngaydilam-giam">Sắp xếp theo ngày bắt đầu (Mới nhất)</option>
+                    </select>
+                    <button id="add-employee">Thêm Nhân Viên</button>
+
+                </div>
+            </section>
+            <section>
+                <div class="content-list">
+                    <table id="employee-table">
+                        <thead>
+                            <tr>
+                                <th>Mã Nhân Viên</th>
+                                <th>Họ</th>
+                                <th>Tên</th>
+                                <th>Giới Tính</th>
+                                <th>Chức Vụ</th>
+                                <th>Lương</th>
+                                <th>Cửa hàng làm việc</th>
+                                <th>Kho hàng làm việc</th>
+                                <th>Chi nhánh làm việc</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-list">
+                            <!-- Danh sách nhân viên sẽ được hiển thị ở đây -->
+                                        {{!-- {{#each rows}}
+                                            <tr>
+                                                <td>{{this.MaNV}}</td>
+                                                <td>{{this.Ho}}</td>
+                                                <td>{{this.Ten}}</td>
+                                                <td>{{this.GioiTinh}}</td>
+                                                <td>{{this.ChucVu}}</td>
+                                                <td>{{this.Luong}}</td>
+                                                <td>{{this.IDCuaHang}}</td>
+                                                <td>{{this.IDKho}}</td>
+                                                <td>{{this.IDChiNhanh}}</td>
+                                            </tr>
+                                        {{/each}} --}}
+                        </tbody>
+                    </table>
+                <div class="pagination">
+                    <button id="prev-page" disabled>Trang Trước</button>
+                    <span id="page-info"></span>
+                    <button id="next-page">Trang Sau</button>
+                </div>
+            </section>
+            <!-- Modal để thêm nhân viên -->
+            <div id="add-employee-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="close-add-modal">&times;</span>
+                    <h2>Thêm Nhân Viên Mới</h2>
+                    <form id="add-employee-form">
+                        <!-- <label for="maNhanVien">Mã Nhân Viên:</label> -->
+                        <!-- <input type="text" id="maNhanVien" required> -->
+                        <label for="ho">Họ:</label>
+                        <input type="text" id="ho" required>
+                        <label for="ten">Tên:</label>
+                        <input type="text" id="ten" required>
+                        <label for="Ngaysinh">Ngày sinh:</label>
+                        <input type="date" id="Ngaysinh" required>
+                        <label for="gioitinh">Giới Tính:</label>
+                        <select id="gioitinh">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                        <label for="SĐT">SĐT:</label>
+                        <input type="number" id="SĐT" required>
+                        <label for="STK">STK:</label>
+                        <input type="number" id="STK" required>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                        <label for="diachi">Địa chỉ:</label>
+                        <input type="text" id="diachi" required>
+                        <label for="chucVu">Chức Vụ:</label>
+                        <input type="text" id="chucVu" required>
+                        <label for="Ngaydilam">Ngày đi làm:</label>
+                        <input type="date" id="Ngaydilam" required>
+                        <label for="luong">Lương:</label>
+                        <input type="number" id="luong" required>
+                        <label for="cuahang">Cửa hàng làm việc:</label>
+                        <input type="text" id="cuahang" required>
+                        <label for="chinhanh">Chi Nhánh:</label>
+                        <input type="text" id="chinhanh" required>
+                        <button type="submit">Thêm Nhân Viên</button>
+                    </form>
+                </div>
+            </div>
+            <!--MODal để edit nhân viên-->
+            <div id="edit-employee-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="close-edit-modal">&times;</span>
+                    <h2>Chỉnh Sửa Nhân Viên</h2>
+                    <form id="edit-employee-form">
+                
+                    </form>
+                </div>
+            </div>
+                <div id="employee-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" id="close-details-modal">&times;</span>
+                        <h2>Chi Tiết Nhân Viên</h2>
+                        <div id="employee-details">
+                            <!-- Chi tiết sẽ được thêm ở đây -->
+                        </div>
+                        <button id="update-employee">Cập Nhật Nhân Viên</button>
+                        <button id="delete-employee">Xóa Nhân Viên</button>
+                    </div>
+                </div>
+        </main>
+    </div>
+    <script src="../public/js/employees.js"></script>
+</body>
+</html>
