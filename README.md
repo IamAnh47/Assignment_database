@@ -40,9 +40,13 @@ Tạo file \`.env\` trong thư mục gốc và thêm các thông tin cấu hình
 \`\`\`env
 # Cấu hình cơ sở dữ liệu
 DB_HOST=localhost
+
 DB_USER=root
+
 DB_PASSWORD=your_password
+
 DB_NAME=your_database_name
+
 \`\`\`
 
 Thay thế \`your_password\` và \`your_database_name\` bằng thông tin phù hợp.
