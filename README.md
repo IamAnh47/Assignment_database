@@ -6,11 +6,10 @@ Web sử dụng Node.js, sử dụng Express làm framework chính, Express-Hand
 
 ---
 
-## Yêu cầu hệ thống
+## Yêu cầu
 - **Node.js**
 - **npm** 
-- **Cơ sở dữ liệu**:
-  - MySQL
+- **Cơ sở dữ liệu**: MySQL
 
 ---
 
@@ -18,26 +17,21 @@ Web sử dụng Node.js, sử dụng Express làm framework chính, Express-Hand
 
 ### 1. Tải mã nguồn
 Clone repository:
-\`\`\`bash
-git clone <repository-url>
-\`\`\`
+**git clone** <repository-url>
+
 
 ### 2. Di chuyển vào thư mục dự án
-\`\`\`bash
-cd assignment_web
-\`\`\`
+**cd assignment_web**
 
 ### 3. Cài đặt các thư viện
 Sử dụng lệnh để cài đặt tất cả các thư viện cần thiết:
-\`\`\`bash
-npm install
-\`\`\`
+**npm install**
 
 ---
 
 ## Cấu hình môi trường
-Tạo file \`.env\` trong thư mục gốc và thêm các thông tin cấu hình database:
-\`\`\`env
+Tạo file **.env** trong thư mục gốc và thêm các thông tin cấu hình database:
+
 # Cấu hình cơ sở dữ liệu
 DB_HOST=localhost
 
@@ -47,25 +41,22 @@ DB_PASSWORD=your_password
 
 DB_NAME=your_database_name
 
-\`\`\`
-
-Thay thế \`your_password\` và \`your_database_name\` bằng thông tin phù hợp.
+Thay thế **your_password** và **your_database_name** bằng thông tin phù hợp.
 
 ---
 
 ## Chạy ứng dụng
 
 Khởi động web:
-\`\`\`bash
-npm start
-\`\`\`
 
-Lệnh trên sẽ khởi động server với \`nodemon\`, tự động tải lại khi có thay đổi trong mã nguồn.
+**npm start**
+
+Lệnh trên sẽ khởi động server với **nodemon**, tự động tải lại khi có thay đổi trong mã nguồn.
 
 ---
 
 ## Cấu trúc
-\`\`\`
+
 assignment_web/
 
 │
