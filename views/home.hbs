@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nhân Viên - Trang Quản Lý Admin</title>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
     <header class="header">
@@ -16,7 +16,7 @@
         <nav class="sidebar">
             <h2>Quản Lý</h2>
             <ul>
-                <li><a href="#">Dashboard</a></li>
+                <li><a href="/views/login.hbs">Dashboard</a></li>
                 <li><a href="#">Người Dùng</a></li>
                 <li><a href="#">Sản Phẩm</a></li>
                 <li><a href="#">Đơn Hàng</a></li>
@@ -66,27 +66,13 @@
                                 <th>Tên</th>
                                 <th>Giới Tính</th>
                                 <th>Chức Vụ</th>
-                                <th>Lương</th>
                                 <th>Cửa hàng làm việc</th>
                                 <th>Kho hàng làm việc</th>
                                 <th>Chi nhánh làm việc</th>
                             </tr>
                         </thead>
                         <tbody id="employee-list">
-                            <!-- Danh sách nhân viên sẽ được hiển thị ở đây -->
-                                        {{!-- {{#each rows}}
-                                            <tr>
-                                                <td>{{this.MaNV}}</td>
-                                                <td>{{this.Ho}}</td>
-                                                <td>{{this.Ten}}</td>
-                                                <td>{{this.GioiTinh}}</td>
-                                                <td>{{this.ChucVu}}</td>
-                                                <td>{{this.Luong}}</td>
-                                                <td>{{this.IDCuaHang}}</td>
-                                                <td>{{this.IDKho}}</td>
-                                                <td>{{this.IDChiNhanh}}</td>
-                                            </tr>
-                                        {{/each}} --}}
+
                         </tbody>
                     </table>
                 <div class="pagination">
@@ -128,11 +114,23 @@
                         <input type="date" id="Ngaydilam" required>
                         <label for="luong">Lương:</label>
                         <input type="number" id="luong" required>
-                        <label for="cuahang">Cửa hàng làm việc:</label>
-                        <input type="text" id="cuahang" required>
-                        <label for="chinhanh">Chi Nhánh:</label>
-                        <input type="text" id="chinhanh" required>
+                        <label for="chinhanh_add">Chi Nhánh:</label>
+                        <select id="chinhanh_add" required>
+                            <option value="default">Chọn chi nhánh</option>
+                        </select>
+
+                        <label for="cuahang_add">Cửa hàng làm việc:</label>
+                        <select id="cuahang_add" required>
+                            <option value="default">Chọn cửa hàng</option>
+                        </select>
+
+                        <label for="khohang_add">Kho Hàng:</label>
+                        <select id="khohang_add" required>
+                            <option value="default">Chọn kho hàng</option>
+                        </select>
+
                         <button type="submit">Thêm Nhân Viên</button>
+
                     </form>
                 </div>
             </div>

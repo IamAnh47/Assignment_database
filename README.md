@@ -65,13 +65,23 @@ assignment_web/
 
 ├── views/                  # File giao diện
 
+    ├── layouts/
+        ├── main.hbs
+    ├── login.hbs
+    ├── home.hbs
+    ├── hash_tools.hbs
+
 ├── server/                 # Server
 
     ├── controllers/
-    
+        ├── userController.js
+        ├── hashController.js
     ├── models/ 
-    
+        ├── db.js
     ├── routes/
+        ├── user.js
+    ├── middlewares/
+        ├── authMiddleware.js
     
 ├── public/                 # Tệp tĩnh (CSS, JS)
 
@@ -86,7 +96,12 @@ assignment_web/
 \`\`\`
 
 ---
-
+    ├── employee.hbs
+    ├── branch.hbs
+    ├── store.hbs
+    ├── warehouse.hbs
+    ├── product.hbs
+    ├── infoAdmin.hbs
 ## Hỗ trợ
 Nếu gặp vấn đề, vui lòng liên hệ tui
 

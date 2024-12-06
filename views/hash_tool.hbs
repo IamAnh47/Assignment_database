@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mã hóa và Lưu Tài Khoản</title>
+</head>
+<body>
+    <h2>Create New User, Hash Existing User Password, or Delete User</h2>
+
+    <!-- Form tạo tài khoản mới -->
+    <h3>Create New User</h3>
+    <form method="POST" action="/api/hash/create">
+        <div>
+            <label for="new_username">Username</label>
+            <input type="text" id="new_username" name="username" required />
+        </div>
+        <div>
+            <label for="new_password">Password</label>
+            <input type="password" id="new_password" name="password" required />
+        </div>
+        <div>
+            <label for="new_role">Role</label>
+            <select name="role" id="new_role">
+                <option value="admin">Admin</option>
+                {{!-- <option value="user" selected>User</option> --}}
+            </select>
+        </div>
+        <div>
+            <button type="submit">Create User</button>
+        </div>
+    </form>
+
+    <!-- Form mã hóa mật khẩu cho user đã có -->
+    <h3>Hash Existing User Password</h3>
+    <form method="POST" action="/api/hash/hash_existing">
+        <div>
+            <label for="existing_username">Username</label>
+            <input type="text" id="existing_username" name="username" required />
+        </div>
+        <div>
+            <label for="existing_password">Password</label>
+            <input type="password" id="existing_password" name="password" required />
+        </div>
+        <div>
+            <button type="submit">Hash Password</button>
+        </div>
+    </form>
+
+    <!-- Form xóa tài khoản -->
+    <h3>Delete User</h3>
+    <form method="POST" action="/api/hash/delete">
+        <div>
+            <label for="delete_username">Username</label>
+            <input type="text" id="delete_username" name="username" required />
+        </div>
+        <div>
+            <button type="submit">Delete User</button>
+        </div>
+    </form>
+
+
+
+
+    <!-- Hiển thị thông báo nếu có -->
+    {{#if message}}
+        <p>{{message}}</p>
+    {{/if}}
+
+</body>
+</html>
