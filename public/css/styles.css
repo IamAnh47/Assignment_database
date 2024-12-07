@@ -328,3 +328,19 @@ select:hover{
 .forgot-password a:hover {
     text-decoration: underline;
 }
+
+.logout-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+.logout-button:hover {
+    background-color: #e60000;
+}
+

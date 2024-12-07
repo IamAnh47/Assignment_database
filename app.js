@@ -32,7 +32,17 @@ app.engine('hbs', create({ extname: '.hbs' }).engine);
 app.set('view engine', 'hbs');
 
 app.use('/api', routes); // API
+// app.post('/api/nhanvien/add', (req, res) => {
+//     // Lấy dữ liệu từ req.body
+//     const { maNV,cccd, ho, ten, ngaysinh, gioitinh, sdt, stk, email, diachi, chucVu, ngaydilam, luong, idChiNhanh, idCuaHang, idKho } = req.body;
 
+//     console.log('Received data from frontend:', req.body); // In ra dữ liệu nhận được từ client
+
+//     // Logic xử lý dữ liệu, ví dụ gọi hàm thêm nhân viên vào DB
+
+//     // Giả sử việc thêm nhân viên thành công
+//     res.json({ message: 'Employee added successfully', data: req.body });
+// });
 app.get('/', (req, res) => {
     res.redirect('/api/login');
 });

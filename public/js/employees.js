@@ -1,8 +1,29 @@
+
 const employees = [];
-const ChiNhanhData = [];
-const CuaHangData = [];
-const KhoHangData = [];
-// Hàm để lấy dữ liệu từ API và gán vào mảng
+    const ChiNhanhData = [];
+    const CuaHangData = [];
+    const KhoHangData = [];
+  
+async function deleteEmployee(maNV) {
+    try {
+        const response = await fetch(`/api/nhanvien/delete/${maNV}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(`Thành công: ${result.message}`);
+        } else {
+            alert(`Thất bại: ${result.message || 'Có lỗi xảy ra'}`);
+        }
+    } catch (error) {
+        console.error('Lỗi khi gọi API xóa nhân viên:', error);
+        alert('Có lỗi xảy ra. Vui lòng thử lại!');
+    }
+}
 const fetchDataAndAssignToArray = (apiUrl, targetArray) => {
     return fetch(apiUrl) // Thêm return ở đây
         .then(response => {
@@ -21,8 +42,6 @@ const fetchDataAndAssignToArray = (apiUrl, targetArray) => {
             console.log('Dữ liệu đã gán:', targetArray);
         });
 };
-
-
 // Tải dữ liệu từ db lên
 async function loadData(){
     try{
@@ -37,54 +56,10 @@ async function loadData(){
     }
 }
 
-function initializeSelectOptions(chinhanhSelect, cuahangSelect, khohangSelect) {
-    let dataChiNhanh = `<option value="default">Chọn chi nhánh</option>`;
-    ChiNhanhData.forEach(item => {
-        dataChiNhanh += `<option value="${item.IDChiNhanh}">${item.TenChiNhanh}</option>`;
-    });
-    chinhanhSelect.innerHTML = dataChiNhanh;
-
-    let dataCuaHang = `<option value="default">Chọn cửa hàng</option>`;
-    CuaHangData.forEach(item => {
-        dataCuaHang += `<option value="${item.IDCuaHang}">${item.TenCuaHang}</option>`;
-    });
-    cuahangSelect.innerHTML = dataCuaHang;
-
-    let dataKhoHang = `<option value="default">Chọn kho hàng</option>`;
-    KhoHangData.forEach(item => {
-        dataKhoHang += `<option value="${item.MaKho}">${item.Ten}</option>`;
-    });
-    khohangSelect.innerHTML = dataKhoHang;
-}
-const chinhanhSelect = document.getElementById('chinhanh');
-const cuahangSelect = document.getElementById('cuahang');
-const khohangSelect = document.getElementById('khohang');
-chinhanhSelect.addEventListener('change', function() {
-    let dataKho = `<option value="default">Chọn Kho Hàng</option>`;
-    let chinhanhCuaHang = `<option value="default">Chọn cửa hàng</option>`;
-
-    if (chinhanhSelect.value !== 'default') {
-        KhoHangData.forEach(item => {
-            if (chinhanhSelect.value === item.MaCN) {
-                dataKho += `<option value="${item.MaKho}">Kho ${item.Ten}</option>`;
-            }
-        });
-        CuaHangData.forEach(item => {
-            if (chinhanhSelect.value === item.IDChiNhanh) {
-                chinhanhCuaHang += `<option value="${item.IDCuaHang}">${item.TenCuaHang}</option>`;
-            }
-        });
-    } else {
-        chinhanhCuaHang = `<option value="default">Chọn cửa hàng</option>`;
-    }
-
-    khohangSelect.innerHTML = dataKho;
-    cuahangSelect.innerHTML = chinhanhCuaHang;
-});
 
 document.addEventListener('DOMContentLoaded', async function(){
+    
     await loadData();
-    await initializeSelectOptions(chinhanhSelect, cuahangSelect, khohangSelect);
     const employeeList = document.getElementById('employee-list');
     const employeeModal = document.getElementById('employee-modal');
     const employeeDetails = document.getElementById('employee-details');
@@ -93,9 +68,6 @@ document.addEventListener('DOMContentLoaded', async function(){
     const updateEmployeeButton = document.getElementById('update-employee');
     const deleteEmployeeButton = document.getElementById('delete-employee');
     
-    const branchSelect = document.getElementById("chinhanh_add");
-    const storeSelect = document.getElementById("cuahang_add");
-    const warehouseSelect = document.getElementById("khohang_add");
     const addEmployeeModal = document.getElementById('add-employee-modal');
     const closeAddModal = document.getElementById('close-add-modal');
     const addEmployeeForm = document.getElementById('add-employee-form');
@@ -106,14 +78,82 @@ document.addEventListener('DOMContentLoaded', async function(){
     
     const searchInput = document.getElementById('search-input');
     const sortSelect = document.getElementById('sort-select');
-        
+    
+    const chinhanhSelect = document.querySelector('#filter-chinhanh');
+    const cuahangSelect = document.querySelector('#filter-cuahang');
+    const khohangSelect = document.querySelector('#filter-khohang');
+   
+    const add_chinhanhSelect = document.querySelector('#add-chinhanh');
+    const add_cuahangSelect = document.querySelector('#add-cuahang');
+    const add_khohangSelect = document.querySelector('#add-khohang');
+    
     const itemsPerPage = 6; // Số lượng nhân viên hiển thị trên mỗi trang
     let currentPage = 1;
         
     // RENDER các giá trị mặc định
      // FILTER
-    // Cập nhật danh sách chi nhánh
-     // FILTER
+    dataChinhanh = ''
+    ChiNhanhData.forEach(item => {
+        dataChinhanh += `<option value="${item.IDChiNhanh}"> ${item.TenChiNhanh} </option>` 
+    })
+    chinhanhSelect.innerHTML += dataChinhanh
+    add_chinhanhSelect.innerHTML+=dataChinhanh
+
+    dataCuaHang = `<option value="default">Chọn cửa hàng</option>`
+    CuaHangData.forEach(item => {
+        dataCuaHang += `<option value="${item.IDCuaHang}"> ${item.TenCuaHang} </option>` 
+    })
+    cuahangSelect.innerHTML = dataCuaHang
+    add_cuahangSelect.innerHTML = dataCuaHang
+
+// Thêm logic cho select
+    chinhanhSelect.addEventListener('change', function() {
+        dataKho = `<option value="default">Chọn Kho Hàng</option>`
+        chinhanh_cuahang = `<option value="default">Chọn cửa hàng</option>`
+        if(chinhanhSelect.value !== 'default'){
+            KhoHangData.forEach(item => {
+                if(chinhanhSelect.value === item.MaCN){
+                    dataKho += `<option value="${item.MaKho}">Kho ${item.Ten} </option>` 
+                }
+            })
+            CuaHangData.forEach(item => {
+                if(chinhanhSelect.value === item.IDChiNhanh){
+                    chinhanh_cuahang += `<option value="${item.IDCuaHang}"> ${item.TenCuaHang} </option>` 
+                }
+            })
+        }
+        else chinhanh_cuahang = dataCuaHang
+        khohangSelect.innerHTML = dataKho
+        cuahangSelect.innerHTML = chinhanh_cuahang
+    });
+// logic cho add select
+/* Nếu chọn cửa hàng thì chi nhánh và kho hàng = NULL*/
+/* Nếu chọn chi nhánh thì cửa hàng là null và kho hàng có thể là null*/
+
+add_chinhanhSelect.addEventListener('change',function(){
+    if(add_chinhanhSelect.value !== 'default'){
+        add_cuahangSelect.innerHTML = `<option value="default"> Null </option>`
+        dataKho=''
+        KhoHangData.forEach(item => {
+            if(add_chinhanhSelect.value === item.MaCN){
+                dataKho += `<option value="${item.MaKho}">Kho ${item.Ten} </option>` 
+            }
+        })
+        add_khohangSelect.innerHTML = `<option value="default"> Chọn kho </option>` + dataKho
+    }
+    else{
+        add_cuahangSelect.innerHTML = dataCuaHang
+    }
+})
+add_cuahangSelect.addEventListener('change',function(){
+    if(add_cuahangSelect.value !== 'default'){
+        add_chinhanhSelect.innerHTML = `<option value="default"> Null </option>`
+        add_khohangSelect.innerHTML = `<option value="default"> Null </option>`
+    }else{
+    add_chinhanhSelect.innerHTML= `<option value="default"> Null </option>` + dataChinhanh
+
+    }
+})
     
     // RENDER ra màn hình
     function renderEmployeeList(page, employeesList) {
@@ -154,7 +194,6 @@ document.addEventListener('DOMContentLoaded', async function(){
         document.getElementById('prev-page').disabled = page === 1;
         document.getElementById('next-page').disabled = page === Math.ceil(employeesList.length / itemsPerPage);
     }
-    
         // Sự kiện cho nút phân trang
         document.getElementById('prev-page').addEventListener('click', () => {
             if (currentPage > 1) {
@@ -171,22 +210,22 @@ document.addEventListener('DOMContentLoaded', async function(){
         });
 
         // Tìm kiếm và sắp xếp
-        function filterAndSortObject() {
+        function filterAndSortObject(){
             let filterObject = employees;
             const searchValue = String(searchInput.value).toLowerCase().trim(); 
-        
             if (searchValue) {
                 filterObject = filterObject.filter(employee => {
-                    // Tìm theo họ tên
-                    if ((employee.Ho + employee.Ten).toLowerCase().includes(searchValue)) {
+                    // Tìm theo tên
+                    if ((employee.Ho + " " + employee.Ten).toLowerCase().includes(searchValue)) {
                         return true;
                     }
                     // Tìm theo giới tính
                     if (searchValue === 'nam' || searchValue === 'nữ') {
-                        if (searchValue.toLowerCase() === 'nam') {
-                            return employee.GioiTinh.toLowerCase() === 'm'; // 'm' cho nam
-                        } else {
-                            return employee.GioiTinh.toLowerCase() === 'f'; // 'f' cho nữ
+                        if(searchValue.toLowerCase() === 'nam') {
+                            return employee.GioiTinh.toLowerCase() === 'm';
+                        }
+                        else {
+                            return employee.GioiTinh.toLowerCase() === 'f';
                         }
                     }
                     // Tìm theo các trường khác
@@ -198,50 +237,55 @@ document.addEventListener('DOMContentLoaded', async function(){
                     return false;
                 });
             }
-        
-            // Các bộ lọc khác (chi nhánh, cửa hàng, kho hàng) như trước...
+            
+            // Lọc theo chi nhánh
             const chinhanhValue = chinhanhSelect.value;
             if (chinhanhValue !== 'default') {
                 filterObject = filterObject.filter(employee => employee.IDChiNhanh == chinhanhValue);
             }
-        
+            // Lọc theo cửa hàng
             const cuahangValue = cuahangSelect.value;
+            var idchinhanh = cuahangSelect.dataset.IDChiNhanh
+            // console.log(idchinhanh)
             if (cuahangValue !== 'default') {
                 filterObject = filterObject.filter(employee => employee.IDCuaHang == cuahangValue);
             }
-        
+            // Lọc theo kho hàng
             const khohangValue = khohangSelect.value;
             if (khohangValue !== 'default') {
                 if (chinhanhValue === 'default') {
                     alert("Vui lòng chọn chi nhánh trước khi chọn kho hàng.");
                     return;
                 }
-                filterObject = filterObject.filter(employee => (employee.IDKho == khohangValue && employee.IDChiNhanh == chinhanhValue));
+                filterObject = filterObject.filter(employee => (employee.IDKho == khohangValue && employee.IDChiNhanh == chinhanhValue) );
             }
-        
-            // Sắp xếp như trước...
+            // sắp xếp
             const sortValue = sortSelect.value;
             if (sortValue) {
-                const [key, order] = sortValue.split('-');
+                const [key, order] = sortValue.split('-'); // tách thành tên và thứ tự
                 filterObject.sort((a, b) => {
-                    if (key === 'ten') {
+                    // sắp xếp theo tên
+                    if (key == 'ten') {
                         const nameA = `${a.Ten}`;
                         const nameB = `${b.Ten}`;
-                        return order === 'tang' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-                    } else if (key === 'luong') {
-                        return order === 'tang' ? a.Luong - b.Luong : b.Luong - a.Luong;
-                    } else if (key === 'ngaydilam') {
-                        return order === 'tang'
-                            ? new Date(a.NgayBatDauLam) - new Date(b.NgayBatDauLam)
-                            : new Date(b.NgayBatDauLam) - new Date(a.NgayBatDauLam);
+                        if(order =='tang'){
+                            return nameA.localeCompare(nameB) // trả về <0 nếu a < b
+                        }else{
+                            return nameB.localeCompare(nameA) 
+                        }
+                    }
+                    // sắp xếp theo lương
+                    else if (key == 'luong') {
+                        return order == 'tang' ? a.Luong - b.Luong : b.Luong - a.Luong;
+                    } else if (key == 'ngaydilam') {
+                        console.log(new Date(a.NgayBatDauLam))
+                        return order == 'tang' ? new Date(a.NgayBatDauLam) - new Date(b.NgayBatDauLam) : new Date(b.NgayBatDauLam) - new Date(a.NgayBatDauLam);
                     }
                     return 0;
                 });
             }
-        
-            renderEmployeeList(currentPage, filterObject);
+            renderEmployeeList(currentPage,filterObject)
         }
-        
         
         searchInput.addEventListener('input', filterAndSortObject);
         sortSelect.addEventListener('change', filterAndSortObject);
@@ -321,11 +365,11 @@ document.addEventListener('DOMContentLoaded', async function(){
             employeeModal.style.display = 'none';
         }
         
-        window.onclick = function(event) {
-            if (event.target !== employeeModal) {
-                employeeModal.style.display = 'none';
-            }
-        }
+        // window.onclick = function(event) {
+        //     if (event.target !== employeeModal) {
+        //         employeeModal.style.display = 'none';
+        //     }
+        // }
         
         employeeList.addEventListener('click', function(event) {
             if (event.target.classList.contains('view-details')) {
@@ -336,21 +380,19 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         
         // XÓA NHÂN VIÊN
-        deleteEmployeeButton.onclick = function() {
+        deleteEmployeeButton.onclick = async function() {
             const ID = deleteEmployeeButton.getAttribute('data-id')
             const employeeIndex = employees.findIndex(emp => emp.MaNV == ID);
-            alert(employeeIndex)
             if (employeeIndex !== -1) // tìm được index
             {
                 // Xóa nhân viên khỏi danh sách
                 // Cập nhập trên database TODO
-                
-                // test fake DATA
-                employees.splice(employeeIndex, 1);
-                alert('Xóa nhân viên thành công!');
+            
+                await deleteEmployee(ID)
+                // alert('Xóa nhân viên thành công!');
                 employeeModal.style.display = 'none'; // Đóng modal chi tiết
-                renderEmployeeList(currentPage,employees); // Cập nhật lại danh sách nhân viên
-                
+                location.reload()
+                // renderEmployeeList(currentPage,employees); // Cập nhật lại danh sách nhân viên
             }
             else{
                 alert("Nhân viên không tồn tại")
@@ -361,51 +403,51 @@ document.addEventListener('DOMContentLoaded', async function(){
         // Thêm nhân viên
         addEmployeeButton.onclick = function() {
             addEmployeeModal.style.display = 'block';
-            initializeSelectOptions(branchSelect, storeSelect, warehouseSelect);
-            
+            // let lastEmp = parseInt(employees[employees.length - 1].MaNV.slice(2))    
+            // document.getElementById('maNV').value = "NV" + (lastEmp+1).toString().padStart(4,'0')
         };
         
         closeAddModal.onclick = function() {
             addEmployeeModal.style.display = 'none';
         };
         
-        window.onclick = function(event) {
-            if (event.target === addEmployeeModal) {
-                addEmployeeModal.style.display = 'none';
-            }
-        };
-        addEmployeeForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            
-            const newEmployee = {
-                MaNV: "NV"+(100 + employees.length+1),
-                Ho: document.getElementById('ho').value,
-                Ten: document.getElementById('ten').value,
-                NamSinh: document.getElementById('Ngaysinh').value,
-                GioiTinh: document.getElementById('gioitinh').value,
-                Email:document.getElementById('email').value,
-                sdt:document.getElementById('SĐT').value,
-                stk:document.getElementById('STK').value,
-                DiaChi:document.getElementById('diachi').value,
-                NgayBatDauLam:document.getElementById('Ngaydilam').value,
-                ChucVu: document.getElementById('chucVu').value,
-                Luong: parseFloat(document.getElementById('luong').value),
-                IDCuaHang: document.getElementById('cuahang').value,
-                IDChiNhanh: document.getElementById('chinhanh').value
-            };
-            try {
-                //Thêm vào db
-                // TODO
-                employees.push(newEmployee)
-                console.log(employees)
-                alert("Thêm thành công")
-                addEmployeeModal.style.display = 'none'
-                renderEmployeeList(currentPage,employees)
-            } catch (error) {
-                alert("Thêm thất bại")
-            }
-            // Gửi dữ liệu đến server
-        });
+        // window.onclick = function(event) {
+        //     if (event.target == addEmployeeModal) {
+        //         addEmployeeModal.style.display = 'none';
+        //     }
+        // };
+        // addEmployeeForm.addEventListener("submit", async function (event) {
+
+        //     const newEmployee = {
+        //         MaNV: document.getElementById('maNV').value,
+        //         Ho: document.getElementById('ho').value,
+        //         Ten: document.getElementById('ten').value,
+        //         NamSinh: document.getElementById('Ngaysinh').value,
+        //         GioiTinh: document.getElementById('gioitinh').value,
+        //         Email:document.getElementById('email').value,
+        //         sdt:document.getElementById('SĐT').value,
+        //         stk:document.getElementById('STK').value,
+        //         DiaChi:document.getElementById('diachi').value,
+        //         NgayBatDauLam:document.getElementById('Ngaydilam').value,
+        //         ChucVu: document.getElementById('chucVu').value,
+        //         Luong: parseFloat(document.getElementById('luong').value),
+        //         IDCuaHang: document.getElementById('add-cuahang').value,
+        //         IDChiNhanh: document.getElementById('add-chinhanh').value,
+        //         IDKho: document.getElementById('add-khohang').value
+        //     };
+        //     try {
+        //         //Thêm vào db
+        //         await addEmployee(newEmployee.MaNV, newEmployee.Ten, newEmployee.ChucVu)
+        //         // TODO
+        //         alert("Thêm thành công")
+        //         addEmployeeModal.style.display = 'none'
+        //         location.reload()
+        //         // renderEmployeeList(currentPage,employees)
+        //     } catch (error) {
+        //         alert("Thêm thất bại")
+        //     }
+        //     // Gửi dữ liệu đến server
+        // });
         
         // EDIT NHÂN VIÊN
         
@@ -485,21 +527,170 @@ document.addEventListener('DOMContentLoaded', async function(){
 
             
             editEmployeeModal.style.display = 'none';
-            alert("cập nhập thành công")
-            renderEmployeeList(currentPage,employees)
+            // alert("cập nhập thành công")
             // Gửi tới server
+            updateEmployee(empIndex);
+            renderEmployeeList(currentPage,employees)
         })
         closeEditModal.onclick = function() {
             editEmployeeModal.style.display = 'none';
         }
         
-        window.onclick = function(event) {
-            if (event.target === editEmployeeModal) {
-                editEmployeeModal.style.display = 'none';
-            }
-        }
+        // window.onclick = function(event) {
+        //     if (event.target === editEmployeeModal) {
+        //         editEmployeeModal.style.display = 'none';
+        //     }
+        // }
         
         console.log(employees)
         renderEmployeeList(currentPage,employees);
 }); 
-//----------------------------------------------------------------
+
+// Function to add a new employee
+async function addEmployee() {
+
+    const newEmployee = {
+        maNV: document.getElementById('maNV').value,
+        cccd: document.getElementById('cccdnv').value,
+        ho: document.getElementById('ho').value,
+        ten: document.getElementById('ten').value,
+        ngaysinh: document.getElementById('Ngaysinh').value,
+        gioitinh: document.getElementById('gioitinh').value,
+        sdt: document.getElementById('SĐT').value,
+        stk: document.getElementById('STK').value,
+        email: document.getElementById('email').value,
+        diachi: document.getElementById('diachi').value,
+        chucVu: document.getElementById('chucVu').value,
+        ngaydilam: document.getElementById('Ngaydilam').value,
+        luong: document.getElementById('luong').value,
+        idChiNhanh: document.getElementById('add-chinhanh').value,
+        idCuaHang: document.getElementById('add-cuahang').value,
+        idKho: document.getElementById('add-khohang').value,
+    };
+    // for (const key in newEmployee) {
+    //     if (newEmployee.hasOwnProperty(key)) {
+    //         console.log(`${key}: ${newEmployee[key]}`);
+    //     }
+    // }
+    if(newEmployee.idChiNhanh == "default") {
+        newEmployee.idChiNhanh = null;
+    }
+    if(newEmployee.idCuaHang == "default") {
+        newEmployee.idCuaHang = null;
+    }
+    if(newEmployee.idKho == "default") {
+        newEmployee.idKho = null;
+    }
+    if(newEmployee.gioitinh == "Nam") {
+        newEmployee.gioitinh = "M";
+    }
+    if(newEmployee.gioitinh == "Nữ") {
+        newEmployee.gioitinh = "F";
+    }
+    try {
+        const response = await fetch('/api/nhanvien/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newEmployee),
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(`Thành công: ${result.message}`);
+        } else {
+            alert(`Thất bại: ${result.message || 'Có lỗi xảy ra'}`);
+        }
+        location.reload();
+    } catch (error) {
+        console.error('Lỗi khi gọi API thêm nhân viên:', error);
+        alert('Có lỗi xảy ra. Vui lòng thử lại!');
+    }
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log('Success:', data);
+    //     if (data.message === 'Employee added successfully') {
+    //         alert('Thêm nhân viên thành công');
+    //         loadData();  // Reload data after adding
+    //     } else {
+    //         alert('Có lỗi khi thêm nhân viên');
+    //     }
+    // })
+    // .catch(error => {
+    //     console.error('Error adding employee:', error);
+    // });
+}
+
+// Event listener for form submission
+document.getElementById('add-employee-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    addEmployee();
+});
+
+// Function to update an employee
+async function updateEmployee(empIndex) {
+
+    const newEmployee = {
+        maNV: employees[empIndex].MaNV,
+        ho:  employees[empIndex].Ho,
+        ten: employees[empIndex].Ten,
+        ngaysinh: employees[empIndex].NamSinh,
+        gioitinh: employees[empIndex].GioiTinh,
+        sdt: employees[empIndex].sdt,
+        stk: employees[empIndex].stk,
+        email: employees[empIndex].email,
+        diachi: employees[empIndex].DiaChi,
+        chucVu: employees[empIndex].ChucVu,
+        ngaydilam: employees[empIndex].NgayBatDauLam,
+        luong: employees[empIndex].Luong,
+        idChiNhanh: employees[empIndex].IDChiNhanh,
+        idCuaHang: employees[empIndex].IDCuaHang,
+        idKho: employees[empIndex].IDKho,
+    };
+
+    // for (const key in newEmployee) {
+    //     if (newEmployee.hasOwnProperty(key)) {
+    //         console.log(`${key}: ${newEmployee[key]}`);
+    //     }
+    // }
+    if(newEmployee.idChiNhanh == "null") {
+        newEmployee.idChiNhanh = null;
+    }
+    if(newEmployee.idCuaHang == "null") {
+        newEmployee.idCuaHang = null;
+    }
+    if(newEmployee.idKho == "null") {
+        newEmployee.idKho = null;
+    }
+    if(newEmployee.gioitinh == "Nam") {
+        newEmployee.gioitinh = "M";
+    }
+    if(newEmployee.gioitinh == "Nữ") {
+        newEmployee.gioitinh = "F";
+    }
+    try {
+        const response = await fetch('/api/nhanvien/update', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newEmployee),
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(`Thành công: ${result.message}`);
+        } else {
+            alert(`Thất bại: ${result.message || 'Có lỗi xảy ra'}`);
+        }
+        // location.reload();
+    } catch (error) {
+        console.error('Lỗi khi gọi API cập nhật nhân viên:', error);
+        alert('Có lỗi xảy ra. Vui lòng thử lại!');
+    }
+}
+
+// document.querySelector(".logout-button").addEventListener("click", async function(){
+//     await location.reload();
+// });

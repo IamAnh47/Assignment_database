@@ -31,6 +31,28 @@ exports.login = async (req, res) => {
         res.status(500).send('Lỗi server!');
     }
 };
+exports.logout = async (req, res) => {
+     req.session.destroy( async (err) => {
+        if (err) {
+            console.error('Lỗi khi xóa session:', err.message);
+            return res.status(500).send('Không thể đăng xuất. Vui lòng thử lại!');
+        }
+
+        // Xóa cookie
+        res.clearCookie('rememberedUser');
+        res.clearCookie('rememberedPassword');
+
+        // Ngăn lưu cache
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Pragma', 'no-cache');
+
+        // Chuyển hướng về trang login
+        res.redirect('/api/login');
+    });
+};
+
+
+
 
 
 exports.viewNhanvien = async (req, res) => {
@@ -62,8 +84,6 @@ exports.viewNhanvien = async (req, res) => {
         res.status(500).send('Lỗi server');
     }
 };
-
-
 
 exports.viewChinhanh = async (req, res) => {
     const UserID = req.session.user?.id;
@@ -157,3 +177,154 @@ exports.viewKho = async (req, res) => {
     }
 };
 
+
+// Add Employee
+exports.addEmployee = async (req, res) => {
+    const UserID = req.session.user?.id;
+    const username = req.session.user?.username;
+
+    if (!UserID || !username) {
+        console.warn('Unauthorized access attempt');
+        return res.status(403).json({ message: 'Bạn chưa đăng nhập' });
+    }
+
+    try {
+        console.info(`Fetching CuaHang for username: ${username}`);
+
+        const host = 'localhost';
+        const db = process.env.DB_NAME;
+
+        // Check 'Select' privilege
+        const hasPrivilege = await checkUserPrivileges(username, host, db, 'insert');
+        if (!hasPrivilege) {
+            console.warn(`User ${username} does not have 'insert' privilege.`);
+            return res.status(403).json({ message: `${hasPrivilege} Bạn không có quyền xem thông tin cửa hàng!` });
+        }
+
+        // const { MaNV, CCCD, Ho, Ten, NamSinh, GioiTinh, DiaChi, ChucVu, NgayBatDauLam, Luong, IDCuaHang, IDKho, IDChiNhanh } = req.body;
+        const { maNV, cccd, ho, ten, ngaysinh, gioitinh, sdt, stk, email, diachi, chucVu, ngaydilam, luong, idChiNhanh, idCuaHang, idKho } = req.body;
+        // console.log('maNV:', maNV);
+        // console.log('cccdnv:', cccd);
+        // console.log('ho:', ho);
+        // console.log('ten:', ten);
+        // console.log('ngaysinh:', ngaysinh);
+        // console.log('gioitinh:', gioitinh);
+        // console.log('sdt:', sdt);
+        // console.log('stk:', stk);
+        // console.log('email:', email);
+        // console.log('diachi:', diachi);
+        // console.log('chucVu:', chucVu);
+        // console.log('ngaydilam:', ngaydilam);
+        // console.log('luong:', luong);
+        // console.log('idChiNhanh:', idChiNhanh);
+        // console.log('idCuaHang:', idCuaHang);
+        // console.log('idKho:', idKho);
+        // console.log('Received data from frontend:', req.body); // In ra dữ liệu nhận được từ client
+
+        try {
+            // console.log('ok');
+            const result = await pool.query('CALL add_employee(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                maNV, cccd, ho, ten, ngaysinh, gioitinh, diachi, chucVu, ngaydilam, luong, idCuaHang, idKho, idChiNhanh
+            ]);
+    
+            res.status(200).json({ message: 'Employee added successfully', data: result });
+        } catch (error) {
+            res.status(500).json({ message: 'Error adding employee', error: error.message });
+        }
+    } catch (err) {
+        console.error(`Error fetching CuaHang for username: ${username}`, err.message);
+        res.status(500).send('Lỗi server');
+    }
+};
+
+// Delete Employee
+exports.deleteEmployee = async (req, res) => {
+    const UserID = req.session.user?.id;
+    const username = req.session.user?.username;
+
+    if (!UserID || !username) {
+        console.warn('Unauthorized access attempt');
+        return res.status(403).json({ message: 'Bạn chưa đăng nhập' });
+    }
+
+    try {
+        console.info(`Fetching CuaHang for username: ${username}`);
+
+        const host = 'localhost';
+        const db = process.env.DB_NAME;
+
+        // Check 'Select' privilege
+        const hasPrivilege = await checkUserPrivileges(username, host, db, 'delete');
+        if (!hasPrivilege) {
+            console.warn(`User ${username} does not have 'delete'); privilege.`);
+            return res.status(403).json({ message: `${hasPrivilege} Bạn không có quyền xem thông tin cửa hàng!` });
+        }
+
+        const { MaNV } = req.params;
+
+        try {
+            const result = await pool.query('CALL delete_employee(?)', [MaNV]);
+            res.status(200).json({ message: 'Employee deleted successfully', data: result });
+        } catch (error) {
+            res.status(500).json({ message: 'Error deleting employee', error: error.message });
+        }
+    } catch (err) {
+        console.error(`Error fetching CuaHang for username: ${username}`, err.message);
+        res.status(500).send('Lỗi server');
+    }
+
+};
+
+// Update Employee
+exports.updateEmployee = async (req, res) => {
+    const UserID = req.session.user?.id;
+    const username = req.session.user?.username;
+
+    if (!UserID || !username) {
+        console.warn('Unauthorized access attempt');
+        return res.status(403).json({ message: 'Bạn chưa đăng nhập' });
+    }
+
+    try {
+        console.info(`Fetching CuaHang for username: ${username}`);
+
+        const host = 'localhost';
+        const db = process.env.DB_NAME;
+
+        // Check 'Select' privilege
+        const hasPrivilege = await checkUserPrivileges(username, host, db, 'update');
+        if (!hasPrivilege) {
+            console.warn(`User ${username} does not have 'update'); privilege.`);
+            return res.status(403).json({ message: `${hasPrivilege} Bạn không có quyền xem thông tin cửa hàng!` });
+        }
+
+        const { maNV, ho, ten, ngaysinh, gioitinh, sdt, stk, email, diachi, chucVu, ngaydilam, luong, idChiNhanh, idCuaHang, idKho } = req.body;
+        console.log('maNV:', maNV);
+        console.log('ho:', ho);
+        console.log('ten:', ten);
+        console.log('ngaysinh:', ngaysinh);
+        console.log('gioitinh:', gioitinh);
+        console.log('sdt:', sdt);
+        console.log('stk:', stk);
+        console.log('email:', email);
+        console.log('diachi:', diachi);
+        console.log('chucVu:', chucVu);
+        console.log('ngaydilam:', ngaydilam);
+        console.log('luong:', luong);
+        console.log('idChiNhanh:', idChiNhanh);
+        console.log('idCuaHang:', idCuaHang);
+        console.log('idKho:', idKho);
+        console.log('Received data from frontend:', req.body); // In ra dữ liệu nhận được từ client
+        try {
+            const result = await pool.query('CALL update_employee(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+                maNV, ho, ten, ngaysinh, gioitinh, diachi, chucVu, ngaydilam, luong, idCuaHang, idKho, idChiNhanh
+            ]);
+            res.status(200).json({ message: 'Employee updated successfully', data: result });
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating employee', error: error.message });
+        }
+    } catch (err) {
+        console.error(`Error fetching CuaHang for username: ${username}`, err.message);
+        res.status(500).send('Lỗi server');
+    }
+};

@@ -15,6 +15,7 @@ router.get('/login', (req, res) => {
 
 
 router.post('/login', userController.login);
+router.get('/logout', userController.logout);
 router.get('/home', authMiddleware, (req, res) => {
     res.render('home', { username: req.session.user.username });
 });
@@ -28,5 +29,10 @@ router.get('/chinhanh', userController.viewChinhanh);
 router.get('/cuahang', userController.viewCuahang);
 router.get('/khohang', userController.viewKho);
 
+
+router.post('/nhanvien/add', userController.addEmployee);
+
+router.post('/nhanvien/delete/:MaNV', userController.deleteEmployee);
+router.patch('/nhanvien/update', userController.updateEmployee);
 
 module.exports = router;
